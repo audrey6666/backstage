@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.finup.modules.datapi.dao.ThirdSourceDao">
+	<select id="queryList" resultType="com.finup.modules.datapi.entity.ThirdSourceEntity" >
+		select * from kc_third_source
+		<where>
+			<if test="creditType != null and creditType.trim() != ''">
+				and credit_type = #{creditType}
+			</if>
+		</where>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
+			<otherwise>
+				order by id asc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null ">
+		limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryThirdSource" resultType="com.finup.modules.datapi.entity.ThirdSourceEntity" >
+		select * from kc_third_source where credit_type = #{creditType}
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(1) from kc_third_source
+		<where>
+			<if test="creditType != null and creditType.trim() != ''">
+				and credit_type = #{creditType}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryObject" resultType="com.finup.modules.datapi.entity.ThirdSourceEntity">
+		select * from kc_third_source where id = #{id}
+	</select>
+
+	<update id="update" parameterType="com.finup.modules.datapi.entity.ThirdSourceEntity">
+		update kc_third_source set `third_source` = #{thirdSource},`update_user` = #{updateUser},`update_time` = now() where id = #{id}
+	</update>
+	 
+	<insert id="save" parameterType="com.finup.modules.datapi.entity.ThirdSourceEntity">
+		insert into kc_third_source
+		(
+			`credit_type`,
+			`third_source`,
+			`create_user`,
+			`update_user`,
+			`create_time`,
+			`update_time`
+		)
+		values
+		(
+			#{creditType},
+			#{thirdSource},
+			#{create_user},
+			#{update_user},
+			#{create_time},
+			#{update_time}
+		)
+	</insert>
+	
+</mapper>
